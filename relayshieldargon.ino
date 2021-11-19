@@ -57,6 +57,9 @@ float voltage = 0;
 unsigned long batterylastmillis = 0;
 unsigned long currentTimelastmillis = 0;
 unsigned long currentDaylastmillis = 0;
+long startsecondswd;
+long stopsecondswd;
+long nowseconds;
 
 BlynkTimer timer;
 
@@ -116,20 +119,15 @@ BLYNK_WRITE(V3)
     {
     // execute this code if the switch widget is now ON
     digitalWrite(relay4, HIGH);  // Set digital pin 2 HIGH
-    terminal.clear();
-    terminal.println(F("Relay 4 has been switched on!"));
-    terminal.flush();
     }
          else
         {
-            // execute this code if the switch widget is now OFF
-            digitalWrite(relay4, LOW);  // Set digital pin 2 LOW 
-            terminal.println(F("Relay 4 has been switched off!"));
-            terminal.flush();     
+          // execute this code if the switch widget is now OFF
+          digitalWrite(relay4, LOW);  // Set digital pin 2 LOW     
         }
 
 }
-BLYNK_WRITE(V6)
+BLYNK_WRITE(V6)// AllDAYS Schedule Selected
 {
     if(param.asInt() == 1)
     {
@@ -138,6 +136,9 @@ BLYNK_WRITE(V6)
     weekend = 0;
     custom = 0;
     Blynk.syncVirtual(V10);
+    terminal.clear();
+    terminal.println("ALL DAYS SCHEDULE IS ACTIVE");
+    terminal.flush();
     }
          else
         {
@@ -152,64 +153,100 @@ BLYNK_WRITE(V10) { // alldays schedule
   
   if(alldays == 1)
   {
-
-  // Process start time
-
-  if (t.hasStartTime())
-  {
-    String StartTime = String("Start Time:") + String(t.getStartHour()) + ":" + String(t.getStartMinute());
-    terminal.println(StartTime);
-  }
-  else if (t.isStartSunrise())
-  {
-    terminal.println("Start at sunrise");
-  }
-  else if (t.isStartSunset())
-  {
-    terminal.println("Start at sunset");
-  }
-  else
-  {
-    // Do nothing
-  }
-
-  // Process stop time
-
-  if (t.hasStopTime())
-  {
-    String StopTime = String("Stop Time:") + String(t.getStopHour()) + ":" + String(t.getStopMinute());
-    terminal.println(StopTime);
-  }
-  else if (t.isStopSunrise())
-  {
-    terminal.println("Stop at sunrise");
-  }
-  else if (t.isStopSunset())
-  {
-    terminal.println("Stop at sunset");
-  }
-  else
-  {
-    // Do nothing: no stop time was set
-  }
-
-  // Process timezone
-  // Timezone is already added to start/stop time
-
-  terminal.println(String("Time zone: ") + t.getTZ());
-
-  // Get timezone offset (in seconds)
-  terminal.println(String("Time zone offset: ") + t.getTZ_Offset());
-
-  // Process weekdays (1. Mon, 2. Tue, 3. Wed, ...)
-
-  for (int i = 1; i <= 7; i++) {
-    if (t.isWeekdaySelected(i)) {
-      String DaySelected = String(i) + String("is selected.");
-      terminal.println(DaySelected);
+    terminal.clear();
+    terminal.println("ALL DAYS SCHEDULE HAS BEEN ACTIVATIED AT CURRENT TIME");
+    currentTime();
+    terminal.flush();
+    currentDay();
+    int dayadjustment = -1;
+    int currentweekday = Time.weekday();
+    if(currentweekday == 1)
+    {
+      dayadjustment = 6; // need for getting Sunday particle Day 1 is sunday and blynk is day 7
     }
-  }
-  terminal.println("---------------------");
+    if(t.isWeekdaySelected(Time.weekday() + dayadjustment))
+    { //Time library starts week on Sunday, Blynk on Monday
+      terminal.println("ALL DAYS ACTIVE today");
+      terminal.flush();
+    if (t.hasStartTime()) // Process start time
+    {
+      String startTime = String("START TIME: ") + String(t.getStartHour()) + ":" + String(t.getStartMinute());
+      terminal.println(startTime);
+      terminal.flush();
+    }
+    if (t.hasStopTime()) // Process stop time
+    {
+      String stopTime = String("STOP TIME: ") + String(t.getStopHour()) + ":" + String(t.getStopMinute());
+      terminal.println(stopTime);
+      terminal.flush();
+    }
+    // Display timezone details, for information purposes only 
+    terminal.println(String("Time zone: ") + t.getTZ()); // Timezone is already added to start/stop time 
+    //  terminal.println(String("Time zone offset: ") + t.getTZ_Offset()); // Get timezone offset (in seconds)
+    terminal.flush();
+  
+     for (int i = 1; i <= 7; i++) 
+     {  // Process weekdays (1. Mon, 2. Tue, 3. Wed, ...)
+        if (t.isWeekdaySelected(i)) {
+        String selectedday = String("SELECTED DAY: ") + String(i);
+        terminal.println(selectedday);
+        terminal.flush();
+        }
+      } 
+        nowseconds = ((Time.hour() * 3600) + (Time.minute() * 60) + Time.second());
+        startsecondswd = (t.getStartHour() * 3600) + (t.getStartMinute() * 60);
+        //Serial.println(startsecondswd);  // used for debugging
+        terminal.print("Now Seconds: ");
+        terminal.println(nowseconds);
+        terminal.print("Start Seconds: ");
+        terminal.println(startsecondswd);
+      if(nowseconds >= startsecondswd)
+      {    
+        terminal.print("ALL DAYS STARTED AT");
+        terminal.println(t.getStartHour() + ":" + t.getStartMinute());
+        terminal.flush();
+        if(nowseconds <= startsecondswd + 90)
+        {    // 90s on 60s timer ensures 1 trigger command is sent
+          // put code here to run relay
+        }      
+      }
+      else
+      {
+        terminal.println("ALL DAY DEVICE NOT STARTED TODAY");
+        terminal.flush();
+      }
+      stopsecondswd = (t.getStopHour() * 3600) + (t.getStopMinute() * 60);
+      if(nowseconds >= stopsecondswd)
+      {
+        //digitalWrite(TestLED, LOW); // set LED OFF
+        //Blynk.virtualWrite(V2, 0);
+        terminal.print("All DAY STOPPED at");
+        terminal.println(t.getStopHour() + ":" + t.getStopMinute());
+        terminal.flush();
+        if(nowseconds <= stopsecondswd + 90)
+        {   // 90s on 60s timer ensures 1 trigger command is sent
+            // code here to switch the relay OFF
+        }              
+      }
+      else
+      {
+        if(nowseconds >= startsecondswd)
+        {  
+          //digitalWrite(TestLED, HIGH); // set LED ON  TEST!!!!!
+          //Blynk.virtualWrite(V2, 1);
+          terminal.println("All day is ON");
+          terminal.flush();
+ 
+        }           
+      }
+    }
+    else
+    {
+      terminal.println("All day INACTIVE today");
+      terminal.flush();
+      // nothing to do today, check again in 30 SECONDS time    
+    }
+    terminal.println();
   }
 }
 
