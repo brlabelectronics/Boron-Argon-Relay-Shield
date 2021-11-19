@@ -1,5 +1,27 @@
+/*-------------------------------------------------------------------------------
+Argon Relay Time Scheduler
+This is the code for the Particle Argon app that communicates and runs 
+the Boron-Argon Relay Shield using the Argon.
+Company; BRLAB ELECTRONICS
+Website: www.brlabelectronics.com
+Written By: Bryan Restine
+Email: bryan.restine@brlabelectronics.com
 
-
+Relay 1 Manual ON/OFF BLYNK(V1)
+Relay 2 Manual ON/OFF BLYNK(V2)
+Relay 3 Manual ON/OFF BLYNK(V3)
+Relay 4 Manual ON/OFF BLYNK(V4)
+Battery SoC Gauge BLYNK(V4)
+Terminal BLYNK(V5)
+ALL DAYS Button ON/OFF BLYNK(V6)
+WEEKDAYS Button ON/OFF BLYNK(V7)
+WEEKEND Button ON/OFF BLYNK(V8)
+CUSTOM Button ON/OFF BLYNK(V9)
+ALL DAYS Scheduler BLYNK(V10)
+WEEKDAYS Scheduler BLYNK(V11)
+WEEKEND Scheduler BLYNK(V12)
+CUSTOM Scheduler BLYNK(V13)
+---------------------------------------------------------------------------------*/
 #define BLYNK_TEMPLATE_ID "TMPLGYDWlg-c"
 #define BLYNK_DEVICE_NAME "Relay Shield Argon"
 #define BLYNK_AUTH_TOKEN "C6Z6LgRQGOnbgXIhwlMKnFSmnjDbuaHE"
@@ -8,42 +30,53 @@
 #define BLYNK_PRINT Serial
 
 // This #include statement was automatically added by the Particle IDE.
-#include <blynk.h>
-
+#include <Blynk.h>
 
 char auth[] = BLYNK_AUTH_TOKEN;
 
-// Attach virtual serial terminal to Virtual Pin V?
-WidgetTerminal terminal(V7);
+// Attach virtual serial terminal to Virtual Pin V5
+WidgetTerminal terminal(V5);
 
+bool isFirstConnect = true;
+// constant integer assignment
 const int relay1 = 5;
 const int relay2 = 6;
 const int relay3 = 7;
 const int relay4 = 8;
+
+// integer variable assignments
+int alldays;
+int weekdays;
+int weekend;
+int custom;
+
+// float assignemnts
 float voltage = 0;
+// other variables
 unsigned long lastmillis = 0;
 
-int alldays = 0;
+
 BlynkTimer timer;
 
+BLYNK_CONNECTED() {
+if (isFirstConnect) {
+  Blynk.syncAll();
+  Blynk.notify("TIMER STARTING!!!!");
+isFirstConnect = false;
+}
+}
 // This function is called every time the Virtual Pin 0 state changes
 BLYNK_WRITE(V0)
 {
     if(param.asInt() == 1)
     {
     // execute this code if the switch widget is now ON
-    digitalWrite(relay1, HIGH);  // Set digital pin 2 HIGH
-    terminal.println(F("Relay 1 has been switched on!"));
-    terminal.println(F("------------------------"));
-    terminal.flush();
+    digitalWrite(relay1, HIGH);  // Set digital pin 5 HIGH
     }
          else
         {
             // execute this code if the switch widget is now OFF
-            digitalWrite(relay1, LOW);  // Set digital pin 2 LOW
-            terminal.println(F("Relay 1 has been switched off!"));
-            terminal.println(F("------------------------"));
-            terminal.flush();
+            digitalWrite(relay1, LOW);  // Set digital pin 5 LOW
         }
 
 }
@@ -52,12 +85,12 @@ BLYNK_WRITE(V1)
     if(param.asInt() == 1)
     {
     // execute this code if the switch widget is now ON
-    digitalWrite(relay2, HIGH);  // Set digital pin 2 HIGH
+    digitalWrite(relay2, HIGH);  // Set digital pin 6 HIGH
     }
          else
         {
             // execute this code if the switch widget is now OFF
-            digitalWrite(relay2, LOW);  // Set digital pin 2 LOW    
+            digitalWrite(relay2, LOW);  // Set digital pin 6 LOW   
         }
 
 }
@@ -66,12 +99,12 @@ BLYNK_WRITE(V2)
     if(param.asInt() == 1)
     {
     // execute this code if the switch widget is now ON
-    digitalWrite(relay3, HIGH);  // Set digital pin 2 HIGH
+    digitalWrite(relay3, HIGH);  // Set digital pin 7 HIGH
     }
          else
         {
             // execute this code if the switch widget is now OFF
-            digitalWrite(relay3, LOW);  // Set digital pin 2 LOW    
+            digitalWrite(relay3, LOW);  // Set digital pin 7 LOW 
         }
 
 }
@@ -81,31 +114,34 @@ BLYNK_WRITE(V3)
     {
     // execute this code if the switch widget is now ON
     digitalWrite(relay4, HIGH);  // Set digital pin 2 HIGH
+    terminal.clear();
+    terminal.println(F("Relay 4 has been switched on!"));
+    terminal.flush();
     }
          else
         {
             // execute this code if the switch widget is now OFF
-            digitalWrite(relay4, LOW);  // Set digital pin 2 LOW    
+            digitalWrite(relay4, LOW);  // Set digital pin 2 LOW 
+            terminal.println(F("Relay 4 has been switched off!"));
+            terminal.flush();     
+        }
+
+}
+BLYNK_WRITE(V6)
+{
+    if(param.asInt() == 1)
+    {
+    
+    }
+         else
+        {
+                
         }
 
 }
 
-BLYNK_WRITE(V5)
-{
-    if(param.asInt() == 1)
-    {
-    // execute this code if the switch widget is now ON
-    alldays == 1;
-    terminal.clear();
-    Blynk.virtualWrite(V6, 1);
-    }
-    else 
-    {
-    alldays=0;
-    }
-}
 
-BLYNK_WRITE(V6) {
+BLYNK_WRITE(V10) {
   if(alldays == 1)
   {
   TimeInputParam t(param);
@@ -174,7 +210,7 @@ void batteryV(){
     double voltage = analogRead(BATT)*0.0011224;
     String BV = String(voltage,2) + String("V");
     Particle.publish("Battery Voltage", BV, PRIVATE);
-    int SoC = map(voltage, 0.00, 4.15, 0.00, 100.00);
+    int SoC = map(voltage, 3.20, 4.14, 0.00, 100.00);
     Blynk.virtualWrite(V4, SoC);
 }
 
