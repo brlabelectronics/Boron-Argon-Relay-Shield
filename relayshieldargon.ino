@@ -203,7 +203,8 @@ BLYNK_WRITE(V10) { // alldays schedule
       if(nowseconds >= startsecondswd)
       {    
         terminal.print("ALL DAYS STARTED AT");
-        terminal.println(t.getStartHour() + ":" + t.getStartMinute());
+         String currentTime = String("Current Time: ") + String(Time.hourFormat12()) + ":" + String(Time.minute());
+         terminal.println(currentTime); // current time in hours and minutes
         terminal.flush();
         if(nowseconds <= startsecondswd + 90)
         {    // 90s on 60s timer ensures 1 trigger command is sent
@@ -315,6 +316,16 @@ void currentDay(){
   }
 }
 
+void activetoday(){        // check if schedule should run today
+  if(Time.year() != 1970)
+  {
+   if (alldays == 1) 
+   { 
+     Blynk.syncVirtual(V10); // sync timeinput widget  
+   }
+   
+  }
+}
 void setup() {
  // Debug console
   Serial.begin(115200);
@@ -334,10 +345,12 @@ void setup() {
   currentTime();
   currentDay();
   terminal.flush();
+
+  timer.setInterval(10000L, activetoday);  // check every 10 SECONDS if schedule should run today 
 }
 
 void loop() {
- Blynk.run();
+  Blynk.run();
   timer.run();
   // update in 120 sec intervals
   if ((millis() - batterylastmillis) > 120000) 
@@ -357,7 +370,7 @@ void loop() {
       currentDaylastmillis = millis();
       currentDay();
   }
-
+  
   // You can inject your own code or combine it with other sketches.
   // Check other examples on how to communicate with Blynk. Remember
   // to avoid delay() function!
