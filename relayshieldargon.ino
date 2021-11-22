@@ -136,9 +136,11 @@ BLYNK_WRITE(V6)// AllDAYS Schedule Selected
     weekend = 0;
     custom = 0;
     Blynk.syncVirtual(V10);
-    terminal.clear();
-    terminal.println("ALL DAYS SCHEDULE IS ACTIVE");
+    terminal.clear()
+    ;terminal.println("ALL DAYS SCHEDULE HAS BEEN ACTIVATIED AT:");
+    currentTime();
     terminal.flush();
+    currentDay();
     }
          else
         {
@@ -153,11 +155,6 @@ BLYNK_WRITE(V10) { // alldays schedule
   
   if(alldays == 1)
   {
-    terminal.clear();
-    terminal.println("ALL DAYS SCHEDULE HAS BEEN ACTIVATIED AT:");
-    currentTime();
-    terminal.flush();
-    currentDay();
     int dayadjustment = -1;
     int currentweekday = Time.weekday();
     if(currentweekday == 1)
@@ -212,7 +209,7 @@ BLYNK_WRITE(V10) { // alldays schedule
             terminal.println("Friday");
             terminal.flush();
             break;
-           case 6:
+            case 6:
             terminal.println("Saturday");
             terminal.flush();
             break;
@@ -227,15 +224,15 @@ BLYNK_WRITE(V10) { // alldays schedule
         nowseconds = ((Time.hour() * 3600) + (Time.minute() * 60) + Time.second());
         startsecondswd = (t.getStartHour() * 3600) + (t.getStartMinute() * 60);
         //Serial.println(startsecondswd);  // used for debugging
-        terminal.print("Now Seconds: ");
-        terminal.println(nowseconds);
-        terminal.print("Start Seconds: ");
-        terminal.println(startsecondswd);
+        //terminal.print("Now Seconds: ");
+        //terminal.println(nowseconds);
+        //terminal.print("Start Seconds: ");
+        //terminal.println(startsecondswd);
       if(nowseconds >= startsecondswd)
       {    
-        terminal.print("ALL DAYS STARTED AT");
-         String currentTime = String("Current Time: ") + String(Time.hourFormat12()) + ":" + String(Time.minute());
-         terminal.println(currentTime); // current time in hours and minutes
+        terminal.println("ALL DAYS STARTED");
+         //String currentTime = String("Current Time: ") + String(Time.hourFormat12()) + ":" + String(Time.minute());
+         //terminal.println(currentTime); // current time in hours and minutes
         terminal.flush();
         if(nowseconds <= startsecondswd + 90)
         {    // 90s on 60s timer ensures 1 trigger command is sent
@@ -245,7 +242,7 @@ BLYNK_WRITE(V10) { // alldays schedule
       }
       else
       {
-        terminal.println("ALL DAY DEVICE NOT STARTED TODAY");
+        terminal.println("ALL DAYS DEVICE NOT STARTED TODAY");
         terminal.flush();
       }
       stopsecondswd = (t.getStopHour() * 3600) + (t.getStopMinute() * 60);
@@ -253,8 +250,8 @@ BLYNK_WRITE(V10) { // alldays schedule
       {
         //digitalWrite(TestLED, LOW); // set LED OFF
         digitalWrite(relay1, LOW);
-        terminal.print("All DAY STOPPED AT");
-        terminal.println(t.getStopHour() + ":" + t.getStopMinute());
+        terminal.println("All DAYS STOPPED");
+        
         terminal.flush();
         if(nowseconds <= stopsecondswd + 90)
         {   
@@ -276,7 +273,7 @@ BLYNK_WRITE(V10) { // alldays schedule
     }
     else
     {
-      terminal.println("All day INACTIVE today");
+      terminal.println("ALL DAYS INACTIVE TODAY");
       terminal.flush();
       // nothing to do today, check again in 30 SECONDS time    
     }
