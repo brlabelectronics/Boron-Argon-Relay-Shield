@@ -458,7 +458,7 @@ BLYNK_WRITE(V11) { // WEEKDAYS schedule
 }
 BLYNK_WRITE(V12) { // WEEKDEND schedule
   TimeInputParam t(param);
-  if(weekdays == 1)
+  if(weekend == 1)
   {
     int dayadjustment = -1;
     int currentweekday = Time.weekday();
@@ -579,9 +579,9 @@ BLYNK_WRITE(V12) { // WEEKDEND schedule
     terminal.println();
   }
 }
-BLYNK_WRITE(V13) { // custom schedule
+BLYNK_WRITE(V13) { // CUSTOM schedule
   TimeInputParam t(param);
-  if(weekdays == 1)
+  if(custom == 1)
   {
     int dayadjustment = -1;
     int currentweekday = Time.weekday();
