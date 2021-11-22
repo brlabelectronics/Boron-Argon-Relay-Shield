@@ -244,14 +244,14 @@ BLYNK_WRITE(V10) { // ALL DAYS schedule
       //terminal.println(startsecondswd);
       if(nowseconds >= startsecondswd) // determine if the relay needs to be switched on [if(nowseconds >= startsecondswd) == true then turn on the relay]
       {    
-        terminal.println("RELAY1 TURNED ON");
-        //String currentTime = String("Current Time: ") + String(Time.hourFormat12()) + ":" + String(Time.minute());
-        //terminal.println(currentTime); // current time in hours and minutes
-        terminal.flush();
         if(nowseconds <= startsecondswd + 90) // 90s on 60s timer ensures 1 trigger command is sent
         {    
           // put code here to run relay
           digitalWrite(relay1, HIGH);
+          terminal.println("RELAY1 TURNED ON");
+          //String currentTime = String("Current Time: ") + String(Time.hourFormat12()) + ":" + String(Time.minute());
+          //terminal.println(currentTime); // current time in hours and minutes
+        terminal.flush();
         }      
       }
       else
@@ -278,7 +278,7 @@ BLYNK_WRITE(V10) { // ALL DAYS schedule
         if(nowseconds >= startsecondswd)
         {  
           digitalWrite(relay1, HIGH);
-          terminal.println("ALL DAY IS ON");
+          terminal.println("ALL DAY DEVICE IS ON");
           terminal.flush();
  
         }           
@@ -435,9 +435,19 @@ void currentTime(){ // get current time
   
   int timezoneoffset = -6;
   Time.zone(timezoneoffset);
-  String currentTime = String("Current Time: ") + String(Time.hourFormat12()) + ":" + String(Time.minute());
-  terminal.print(currentTime); // current time in hours and minutes
-  terminal.flush();
+  int minute = Time.minute();
+  if(minute <=9)
+  {
+   String currentTimefixed = String("Current Time: ") + String(Time.hourFormat12()) + ":" + "0" + String(Time.minute());
+   terminal.print(currentTimefixed); // current time in hours and minutes
+   terminal.flush();  
+  }
+  else
+  {
+   String currentTime = String("Current Time: ") + String(Time.hourFormat12()) + ":" + String(Time.minute());
+   terminal.print(currentTime); // current time in hours and minutes
+   terminal.flush();
+  }
   int isAM = Time.isAM();
   if(isAM == 1){
     terminal.println("AM");
