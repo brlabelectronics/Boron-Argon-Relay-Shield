@@ -143,7 +143,8 @@ BLYNK_WRITE(V6) // ALL DAYS Schedule Selected
   }
   else
   { 
-    alldays = 0; 
+    alldays = 0;
+    digitalWrite(relay1, LOW); 
   }
 }
 BLYNK_WRITE(V7) // WEEKDAYS Schedule Selected
@@ -164,6 +165,7 @@ BLYNK_WRITE(V7) // WEEKDAYS Schedule Selected
   else
   { 
     weekdays = 0; 
+    digitalWrite(relay1, LOW);
   }
 }
 BLYNK_WRITE(V8) // WEEKEND Schedule Selected
@@ -184,6 +186,7 @@ BLYNK_WRITE(V8) // WEEKEND Schedule Selected
   else
   { 
     weekend = 0; 
+    digitalWrite(relay1, LOW);
   }
 }
 BLYNK_WRITE(V9) // CUSTOM Schedule Selected
@@ -203,7 +206,8 @@ BLYNK_WRITE(V9) // CUSTOM Schedule Selected
   }
   else
   { 
-    custom = 0; 
+    custom = 0;
+    digitalWrite(relay1,LOW);
   }
 }
 BLYNK_WRITE(V10) { // ALL DAYS schedule
@@ -456,7 +460,7 @@ BLYNK_WRITE(V11) { // WEEKDAYS schedule
     terminal.println();
   }
 }
-BLYNK_WRITE(V12) { // WEEKDEND schedule
+BLYNK_WRITE(V12) { // WEEKEND schedule
   TimeInputParam t(param);
   if(weekend == 1)
   {
