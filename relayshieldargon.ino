@@ -154,7 +154,7 @@ BLYNK_WRITE(V10) { // alldays schedule
   if(alldays == 1)
   {
     terminal.clear();
-    terminal.println("ALL DAYS SCHEDULE HAS BEEN ACTIVATIED AT CURRENT TIME");
+    terminal.println("ALL DAYS SCHEDULE HAS BEEN ACTIVATIED AT:");
     currentTime();
     terminal.flush();
     currentDay();
@@ -166,7 +166,7 @@ BLYNK_WRITE(V10) { // alldays schedule
     }
     if(t.isWeekdaySelected(Time.weekday() + dayadjustment))
     { //Time library starts week on Sunday, Blynk on Monday
-      terminal.println("ALL DAYS ACTIVE today");
+      terminal.println("ALL DAYS ACTIVE TODAY");
       terminal.flush();
     if (t.hasStartTime()) // Process start time
     {
@@ -187,10 +187,41 @@ BLYNK_WRITE(V10) { // alldays schedule
   
      for (int i = 1; i <= 7; i++) 
      {  // Process weekdays (1. Mon, 2. Tue, 3. Wed, ...)
-        if (t.isWeekdaySelected(i)) {
-        String selectedday = String("SELECTED DAY: ") + String(i);
-        terminal.println(selectedday);
-        terminal.flush();
+        if (t.isWeekdaySelected(i)) 
+        {
+          terminal.print("SELECTED DAY: ");
+          switch (i)
+          {
+            case 1:
+            terminal.println("Monday");
+            terminal.flush();
+            break;
+            case 2:
+            terminal.println("Tuesday");
+            terminal.flush();
+            break;
+            case 3: 
+            terminal.println("Wednesday");
+            terminal.flush();
+            break;
+            case 4:
+            terminal.println("Thurday");
+            terminal.flush();
+            break;
+            case 5:
+            terminal.println("Friday");
+            terminal.flush();
+            break;
+           case 6:
+            terminal.println("Saturday");
+            terminal.flush();
+            break;
+            case 7:
+            terminal.println("Sunday");
+            terminal.flush();
+            break;
+          }
+        
         }
       } 
         nowseconds = ((Time.hour() * 3600) + (Time.minute() * 60) + Time.second());
@@ -209,6 +240,7 @@ BLYNK_WRITE(V10) { // alldays schedule
         if(nowseconds <= startsecondswd + 90)
         {    // 90s on 60s timer ensures 1 trigger command is sent
           // put code here to run relay
+          digitalWrite(relay1, HIGH);
         }      
       }
       else
@@ -220,22 +252,23 @@ BLYNK_WRITE(V10) { // alldays schedule
       if(nowseconds >= stopsecondswd)
       {
         //digitalWrite(TestLED, LOW); // set LED OFF
-        //Blynk.virtualWrite(V2, 0);
-        terminal.print("All DAY STOPPED at");
+        digitalWrite(relay1, LOW);
+        terminal.print("All DAY STOPPED AT");
         terminal.println(t.getStopHour() + ":" + t.getStopMinute());
         terminal.flush();
         if(nowseconds <= stopsecondswd + 90)
-        {   // 90s on 60s timer ensures 1 trigger command is sent
-            // code here to switch the relay OFF
+        {   
+          // 90s on 60s timer ensures 1 trigger command is sent
+          // code here to switch the relay OFF
+          digitalWrite(relay1, LOW);
         }              
       }
       else
       {
         if(nowseconds >= startsecondswd)
         {  
-          //digitalWrite(TestLED, HIGH); // set LED ON  TEST!!!!!
-          //Blynk.virtualWrite(V2, 1);
-          terminal.println("All day is ON");
+          digitalWrite(relay1, HIGH);
+          terminal.println("ALL DAY IS ON");
           terminal.flush();
  
         }           
@@ -283,6 +316,7 @@ void currentTime(){
 void currentDay(){ 
   // function to get current local day for debugging
   int currentweekday = Time.weekday();
+  terminal.print("Current Day: ");
   switch (currentweekday)
   {
     case 1:
