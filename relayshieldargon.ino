@@ -166,6 +166,46 @@ BLYNK_WRITE(V7) // WEEKDAYS Schedule Selected
     weekdays = 0; 
   }
 }
+BLYNK_WRITE(V8) // WEEKEND Schedule Selected
+{
+  if(param.asInt() == 1)
+  {
+    alldays = 0;
+    weekdays = 0;
+    weekend = 1;
+    custom = 0;
+    Blynk.syncVirtual(V12);
+    terminal.clear()
+    ;terminal.println("WEEKEND SCHEDULE HAS BEEN ACTIVATIED AT:");
+    currentTime();
+    terminal.flush();
+    currentDay();
+  }
+  else
+  { 
+    weekend = 0; 
+  }
+}
+BLYNK_WRITE(V9) // CUSTOM Schedule Selected
+{
+  if(param.asInt() == 1)
+  {
+    alldays = 0;
+    weekdays = 0;
+    weekend = 0;
+    custom = 1;
+    Blynk.syncVirtual(V13);
+    terminal.clear()
+    ;terminal.println("CUSTOM SCHEDULE HAS BEEN ACTIVATIED AT:");
+    currentTime();
+    terminal.flush();
+    currentDay();
+  }
+  else
+  { 
+    custom = 0; 
+  }
+}
 BLYNK_WRITE(V10) { // ALL DAYS schedule
   TimeInputParam t(param);
   
@@ -746,6 +786,14 @@ void activetoday(){ // check if schedule should run today and refresh time input
    if(weekdays == 1)
    {
      Blynk.syncVirtual(V11); // sync WEEKDAYS time input widget
+   }
+    if(weekend == 1)
+   {
+     Blynk.syncVirtual(V12); // sync WEEKEND time input widget
+   }
+    if(custom == 1)
+   {
+     Blynk.syncVirtual(V13); // sync CUSTOM time input widget
    }
   }
 }
