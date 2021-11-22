@@ -22,9 +22,9 @@ WEEKDAYS Scheduler BLYNK(V11)
 WEEKEND Scheduler BLYNK(V12)
 CUSTOM Scheduler BLYNK(V13)
 ---------------------------------------------------------------------------------*/
-#define BLYNK_TEMPLATE_ID "***********"  
-#define BLYNK_DEVICE_NAME "***************"
-#define BLYNK_AUTH_TOKEN "*****************"
+#define BLYNK_TEMPLATE_ID "***********"  // add your template id here
+#define BLYNK_DEVICE_NAME "***************" // add your device name here
+#define BLYNK_AUTH_TOKEN "*****************" // add your auth token here
 
 // Comment this out to disable prints and save space
 #define BLYNK_PRINT Serial
