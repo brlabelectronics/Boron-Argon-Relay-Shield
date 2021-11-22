@@ -22,9 +22,9 @@ WEEKDAYS Scheduler BLYNK(V11)
 WEEKEND Scheduler BLYNK(V12)
 CUSTOM Scheduler BLYNK(V13)
 ---------------------------------------------------------------------------------*/
-#define BLYNK_TEMPLATE_ID "TMPLGYDWlg-c"
-#define BLYNK_DEVICE_NAME "Relay Shield Argon"
-#define BLYNK_AUTH_TOKEN "C6Z6LgRQGOnbgXIhwlMKnFSmnjDbuaHE"
+#define BLYNK_TEMPLATE_ID "***********"  
+#define BLYNK_DEVICE_NAME "***************"
+#define BLYNK_AUTH_TOKEN "*****************"
 
 // Comment this out to disable prints and save space
 #define BLYNK_PRINT Serial
