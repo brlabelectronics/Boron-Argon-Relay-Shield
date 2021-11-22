@@ -175,11 +175,11 @@ BLYNK_WRITE(V10) { // alldays schedule
     int currentweekday = Time.weekday();
     if(currentweekday == 1)
     {
-      dayadjustment = 6; // need for getting Sunday particle Day 1 is sunday and blynk is day 7
+      dayadjustment = 6; // need for getting Sunday particle Day 1 is Sunday and Blynk is day 7
     }
-    if(t.isWeekdaySelected(Time.weekday() + dayadjustment))
-    { //Time library starts week on Sunday, Blynk on Monday
-      terminal.println("ALL DAYS ACTIVE TODAY");
+    if(t.isWeekdaySelected(Time.weekday() + dayadjustment)) //Time library starts week on Sunday, Blynk on Monday
+    { 
+      terminal.println("ALL DAYS SCHEDULE IS ACTIVE TODAY");
       terminal.flush();
     if (t.hasStartTime()) // Process start time
     {
@@ -234,7 +234,6 @@ BLYNK_WRITE(V10) { // alldays schedule
             terminal.flush();
             break;
           }
-        
         }
       } 
         nowseconds = ((Time.hour() * 3600) + (Time.minute() * 60) + Time.second());
@@ -244,18 +243,18 @@ BLYNK_WRITE(V10) { // alldays schedule
         //terminal.println(nowseconds);
         //terminal.print("Start Seconds: ");
         //terminal.println(startsecondswd);
-      if(nowseconds >= startsecondswd)
-      {    
-        terminal.println("ALL DAYS STARTED");
-         //String currentTime = String("Current Time: ") + String(Time.hourFormat12()) + ":" + String(Time.minute());
-         //terminal.println(currentTime); // current time in hours and minutes
-        terminal.flush();
-        if(nowseconds <= startsecondswd + 90)
-        {    // 90s on 60s timer ensures 1 trigger command is sent
+        if(nowseconds >= startsecondswd)
+        {    
+          terminal.println("RELAY1 TURNED ON");
+          //String currentTime = String("Current Time: ") + String(Time.hourFormat12()) + ":" + String(Time.minute());
+          //terminal.println(currentTime); // current time in hours and minutes
+          terminal.flush();
+          if(nowseconds <= startsecondswd + 90)
+          {    // 90s on 60s timer ensures 1 trigger command is sent
           // put code here to run relay
           digitalWrite(relay1, HIGH);
-        }      
-      }
+          }      
+        }
       else
       {
         terminal.println("ALL DAYS DEVICE NOT STARTED TODAY");
@@ -266,7 +265,7 @@ BLYNK_WRITE(V10) { // alldays schedule
       {
         //digitalWrite(TestLED, LOW); // set LED OFF
         digitalWrite(relay1, LOW);
-        terminal.println("All DAYS STOPPED");
+        terminal.println("RELAY1 TURNED OFF");
         
         terminal.flush();
         if(nowseconds <= stopsecondswd + 90)
