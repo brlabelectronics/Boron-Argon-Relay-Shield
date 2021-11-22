@@ -126,7 +126,7 @@ BLYNK_WRITE(V3) // relay4 manual on/off
         }
 
 }
-BLYNK_WRITE(V6) // AllDAYS Schedule Selected
+BLYNK_WRITE(V6) // ALL DAYS Schedule Selected
 {
   if(param.asInt() == 1)
   {
@@ -166,7 +166,7 @@ BLYNK_WRITE(V7) // WEEKDAYS Schedule Selected
     weekdays = 0; 
   }
 }
-BLYNK_WRITE(V10) { // alldays schedule
+BLYNK_WRITE(V10) { // ALL DAYS schedule
   TimeInputParam t(param);
   
   if(alldays == 1)
@@ -177,35 +177,34 @@ BLYNK_WRITE(V10) { // alldays schedule
     {
       dayadjustment = 6; // need for getting Sunday particle Day 1 is Sunday and Blynk is day 7
     }
-    if(t.isWeekdaySelected(Time.weekday() + dayadjustment)) //Time library starts week on Sunday, Blynk on Monday
+    if(t.isWeekdaySelected(Time.weekday() + dayadjustment)) //Time library starts week on Sunday, Blynk on Monday. Check to see if current day is selected
     { 
       terminal.println("ALL DAYS SCHEDULE IS ACTIVE TODAY");
       terminal.flush();
-    if (t.hasStartTime()) // Process start time
-    {
-      String startTime = String("START TIME: ") + String(t.getStartHour()) + ":" + String(t.getStartMinute());
-      terminal.println(startTime);
+      if (t.hasStartTime()) // Process start time if a start time is avaialbe on the selected day
+      {
+        String startTime = String("START TIME: ") + String(t.getStartHour()) + ":" + String(t.getStartMinute());
+        terminal.println(startTime);
+        terminal.flush();
+      }
+      if (t.hasStopTime()) // Process stop time if a stop time is availbe on the selected day
+      {
+        String stopTime = String("STOP TIME: ") + String(t.getStopHour()) + ":" + String(t.getStopMinute());
+        terminal.println(stopTime);
+        terminal.flush();
+      }
+      // Display timezone details, for information purposes only 
+      terminal.println(String("Time zone: ") + t.getTZ()); // Timezone is already added to start/stop time 
+      //  terminal.println(String("Time zone offset: ") + t.getTZ_Offset()); // Get timezone offset (in seconds)
       terminal.flush();
-    }
-    if (t.hasStopTime()) // Process stop time
-    {
-      String stopTime = String("STOP TIME: ") + String(t.getStopHour()) + ":" + String(t.getStopMinute());
-      terminal.println(stopTime);
-      terminal.flush();
-    }
-    // Display timezone details, for information purposes only 
-    terminal.println(String("Time zone: ") + t.getTZ()); // Timezone is already added to start/stop time 
-    //  terminal.println(String("Time zone offset: ") + t.getTZ_Offset()); // Get timezone offset (in seconds)
-    terminal.flush();
-  
-     for (int i = 1; i <= 7; i++) 
-     {  // Process weekdays (1. Mon, 2. Tue, 3. Wed, ...)
-        if (t.isWeekdaySelected(i)) 
+      for (int i = 1; i <= 7; i++) // Process weekdays (1. Mon, 2. Tue, 3. Wed, ...)
+      {  
+        if (t.isWeekdaySelected(i)) // determine which days are selected to show to user 
         {
           terminal.print("SELECTED DAY: ");
           switch (i)
           {
-            case 1:
+             case 1:
             terminal.println("Monday");
             terminal.flush();
             break;
@@ -236,41 +235,40 @@ BLYNK_WRITE(V10) { // alldays schedule
           }
         }
       } 
-        nowseconds = ((Time.hour() * 3600) + (Time.minute() * 60) + Time.second());
-        startsecondswd = (t.getStartHour() * 3600) + (t.getStartMinute() * 60);
-        //Serial.println(startsecondswd);  // used for debugging
-        //terminal.print("Now Seconds: ");
-        //terminal.println(nowseconds);
-        //terminal.print("Start Seconds: ");
-        //terminal.println(startsecondswd);
-        if(nowseconds >= startsecondswd)
+      nowseconds = ((Time.hour() * 3600) + (Time.minute() * 60) + Time.second()); // calcualted the current time in seconds
+      startsecondswd = (t.getStartHour() * 3600) + (t.getStartMinute() * 60); // calculate the selected start time in seconds
+      //Serial.println(startsecondswd);  // used for debugging
+      //terminal.print("Now Seconds: ");
+      //terminal.println(nowseconds);
+      //terminal.print("Start Seconds: ");
+      //terminal.println(startsecondswd);
+      if(nowseconds >= startsecondswd) // determine if the relay needs to be switched on [if(nowseconds >= startsecondswd) == true then turn on the relay]
+      {    
+        terminal.println("RELAY1 TURNED ON");
+        //String currentTime = String("Current Time: ") + String(Time.hourFormat12()) + ":" + String(Time.minute());
+        //terminal.println(currentTime); // current time in hours and minutes
+        terminal.flush();
+        if(nowseconds <= startsecondswd + 90) // 90s on 60s timer ensures 1 trigger command is sent
         {    
-          terminal.println("RELAY1 TURNED ON");
-          //String currentTime = String("Current Time: ") + String(Time.hourFormat12()) + ":" + String(Time.minute());
-          //terminal.println(currentTime); // current time in hours and minutes
-          terminal.flush();
-          if(nowseconds <= startsecondswd + 90)
-          {    // 90s on 60s timer ensures 1 trigger command is sent
           // put code here to run relay
           digitalWrite(relay1, HIGH);
-          }      
-        }
+        }      
+      }
       else
       {
         terminal.println("ALL DAYS DEVICE NOT STARTED TODAY");
         terminal.flush();
       }
       stopsecondswd = (t.getStopHour() * 3600) + (t.getStopMinute() * 60);
-      if(nowseconds >= stopsecondswd)
+      if(nowseconds >= stopsecondswd) // determine if the relay needs to be switched off [if(nowseconds >= stopsecondswd) == true then turn off the relay]
       {
         //digitalWrite(TestLED, LOW); // set LED OFF
         digitalWrite(relay1, LOW);
         terminal.println("RELAY1 TURNED OFF");
         
         terminal.flush();
-        if(nowseconds <= stopsecondswd + 90)
+        if(nowseconds <= stopsecondswd + 90) // 90s on 60s timer ensures 1 trigger command is sent
         {   
-          // 90s on 60s timer ensures 1 trigger command is sent
           // code here to switch the relay OFF
           digitalWrite(relay1, LOW);
         }              
@@ -295,7 +293,7 @@ BLYNK_WRITE(V10) { // alldays schedule
     terminal.println();
   }
 }
-BLYNK_WRITE(V11) { // weekdays schedule
+BLYNK_WRITE(V11) { // WEEKDAYS schedule
   TimeInputParam t(param);
   
   if(weekdays == 1)
@@ -489,7 +487,7 @@ void currentDay(){ // get current day
     break;
   }
 }
-void activetoday(){ // check if schedule should run today
+void activetoday(){ // check if schedule should run today and refresh time input widgets
   if(Time.year() != 1970)
   {
    if (alldays == 1) 
