@@ -996,8 +996,10 @@ void activetoday(){ // check if schedule should run today and refresh time input
 void wifistrength(){
  WiFiSignal sig = WiFi.RSSI();
  float strength = sig.getStrength();
- String WiFiStrength = String(strength,0) + String("%");
- Particle.publish("WiFi Strength", WiFiStrength, PRIVATE);
+ //String WiFiStrength = String(strength,0) + String("%");
+ //Particle.publish("WiFi Strength", WiFiStrength, PRIVATE);
+ String displaywifi = String("WiFi Strength: ") + String(strength,0) + String("%");
+ Blynk.setProperty(V5, "label", displaywifi);
 }
 void setup() { // setup code runs once first
  // Debug console
@@ -1018,7 +1020,7 @@ void setup() { // setup code runs once first
   currentDay();
   terminal.flush();
   timer.setInterval(10000L, activetoday);  // check every 10 SECONDS if schedule should run today 
-  timer.setInterval(120000L, wifistrength); // get the wifi strength every 120 seconds
+  timer.setInterval(10000L, wifistrength); // get the wifi strength every 10 seconds
 }
 void loop() {
   Blynk.run();
