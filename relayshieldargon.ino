@@ -21,6 +21,10 @@ ALL DAYS Scheduler BLYNK(V10)
 WEEKDAYS Scheduler BLYNK(V11)
 WEEKEND Scheduler BLYNK(V12)
 CUSTOM Scheduler BLYNK(V13)
+Relay 1 Selector BLYNK(V14)
+Relay 2 Selector BLYNK(V15)
+Relay 3 Selector BLYNK(V16)
+Relay 4 Selector BLYNK(V17)
 ---------------------------------------------------------------------------------*/
 #define BLYNK_TEMPLATE_ID "***********"  // add your template id here
 #define BLYNK_DEVICE_NAME "***************" // add your device name here
@@ -49,6 +53,10 @@ int alldays;
 int weekdays;
 int weekend;
 int custom;
+int relay1selected;
+int relay2selected;
+int relay3selected;
+int relay4selected;
 
 // float assignemnts
 float voltage = 0;
@@ -290,12 +298,30 @@ BLYNK_WRITE(V10) { // ALL DAYS schedule
       {    
         if(nowseconds <= startsecondswd + 90) // 90s on 60s timer ensures 1 trigger command is sent
         {    
-          // put code here to run relay
-          digitalWrite(relay1, HIGH);
-          terminal.println("RELAY1 TURNED ON");
+          // put code here to run relays
+          if(relay1selected == 1)
+          {
+           digitalWrite(relay1, HIGH);
+           terminal.println("RELAY1 TURNED ON"); 
+          }
+          if(relay2selected == 1)
+          {
+           digitalWrite(relay2, HIGH);
+           terminal.println("RELAY2 TURNED ON"); 
+          }
+           if(relay3selected == 1)
+          {
+           digitalWrite(relay3, HIGH);
+           terminal.println("RELAY3 TURNED ON"); 
+          }
+          if(relay4selected == 1)
+          {
+           digitalWrite(relay4, HIGH);
+           terminal.println("RELAY4 TURNED ON"); 
+          }
           //String currentTime = String("Current Time: ") + String(Time.hourFormat12()) + ":" + String(Time.minute());
           //terminal.println(currentTime); // current time in hours and minutes
-        terminal.flush();
+          terminal.flush();
         }      
       }
       else
@@ -306,22 +332,37 @@ BLYNK_WRITE(V10) { // ALL DAYS schedule
       stopsecondswd = (t.getStopHour() * 3600) + (t.getStopMinute() * 60);
       if(nowseconds >= stopsecondswd) // determine if the relay needs to be switched off [if(nowseconds >= stopsecondswd) == true then turn off the relay]
       {
-        //digitalWrite(TestLED, LOW); // set LED OFF
-        digitalWrite(relay1, LOW);
-        terminal.println("RELAY1 TURNED OFF");
-        
-        terminal.flush();
         if(nowseconds <= stopsecondswd + 90) // 90s on 60s timer ensures 1 trigger command is sent
         {   
           // code here to switch the relay OFF
-          digitalWrite(relay1, LOW);
+          if(relay1selected == 1)
+          {
+           digitalWrite(relay1, LOW);
+           terminal.println("RELAY1 TURNED OFF");
+          }
+          if(relay2selected == 1)
+          {
+           digitalWrite(relay2, LOW);
+           terminal.println("RELAY2 TURNED OFF");
+          }
+          if(relay3selected == 1)
+          {
+           digitalWrite(relay3, LOW);
+           terminal.println("RELAY3 TURNED OFF");
+          }
+          if(relay4selected == 1)
+          {
+           digitalWrite(relay4, LOW);
+           terminal.println("RELAY4 TURNED OFF");
+          }
+          terminal.flush();
         }              
       }
       else
       {
         if(nowseconds >= startsecondswd)
         {  
-          digitalWrite(relay1, HIGH);
+          
           terminal.println("ALL DAY DEVICE IS ON");
           terminal.flush();
  
@@ -417,8 +458,26 @@ BLYNK_WRITE(V11) { // WEEKDAYS schedule
         if(nowseconds <= startsecondswd + 90) // 90s on 60s timer ensures 1 trigger command is sent
         {    
           // put code here to run relay
-          digitalWrite(relay1, HIGH);
-          terminal.println("RELAY1 TURNED ON");
+          if(relay1selected == 1)
+          {
+           digitalWrite(relay1, HIGH);
+           terminal.println("RELAY1 TURNED ON"); 
+          }
+          if(relay2selected == 1)
+          {
+           digitalWrite(relay2, HIGH);
+           terminal.println("RELAY2 TURNED ON"); 
+          }
+           if(relay3selected == 1)
+          {
+           digitalWrite(relay3, HIGH);
+           terminal.println("RELAY3 TURNED ON"); 
+          }
+          if(relay4selected == 1)
+          {
+           digitalWrite(relay4, HIGH);
+           terminal.println("RELAY4 TURNED ON"); 
+          }
           terminal.flush();
           //String currentTime = String("Current Time: ") + String(Time.hourFormat12()) + ":" + String(Time.minute());
           //terminal.println(currentTime); // current time in hours and minutes
@@ -432,22 +491,37 @@ BLYNK_WRITE(V11) { // WEEKDAYS schedule
       stopsecondswd = (t.getStopHour() * 3600) + (t.getStopMinute() * 60);
       if(nowseconds >= stopsecondswd)
       {
-        digitalWrite(relay1, LOW);
-        terminal.println("RELAY1 TURNED OFF");
-        terminal.flush();
         if(nowseconds <= stopsecondswd + 90) // 90s on 60s timer ensures 1 trigger command is sent
         {   
-          digitalWrite(relay1, LOW);
+          if(relay1selected == 1)
+          {
+           digitalWrite(relay1, LOW);
+           terminal.println("RELAY1 TURNED OFF");
+          }
+          if(relay2selected == 1)
+          {
+           digitalWrite(relay2, LOW);
+           terminal.println("RELAY2 TURNED OFF");
+          }
+          if(relay3selected == 1)
+          {
+           digitalWrite(relay3, LOW);
+           terminal.println("RELAY3 TURNED OFF");
+          }
+          if(relay4selected == 1)
+          {
+           digitalWrite(relay4, LOW);
+           terminal.println("RELAY4 TURNED OFF");
+          }
+          terminal.flush();
         }              
       }
       else
       {
         if(nowseconds >= startsecondswd)
         {  
-          digitalWrite(relay1, HIGH);
           terminal.println("WEEKDAYS DEVICE IS ON");
           terminal.flush();
- 
         }           
       }
     }
@@ -540,8 +614,26 @@ BLYNK_WRITE(V12) { // WEEKEND schedule
         if(nowseconds <= startsecondswd + 90) // 90s on 60s timer ensures 1 trigger command is sent
         {    
           // put code here to run relay
-          digitalWrite(relay1, HIGH);
-          terminal.println("RELAY1 TURNED ON");
+          if(relay1selected == 1)
+          {
+           digitalWrite(relay1, HIGH);
+           terminal.println("RELAY1 TURNED ON"); 
+          }
+          if(relay2selected == 1)
+          {
+           digitalWrite(relay2, HIGH);
+           terminal.println("RELAY2 TURNED ON"); 
+          }
+           if(relay3selected == 1)
+          {
+           digitalWrite(relay3, HIGH);
+           terminal.println("RELAY3 TURNED ON"); 
+          }
+          if(relay4selected == 1)
+          {
+           digitalWrite(relay4, HIGH);
+           terminal.println("RELAY4 TURNED ON"); 
+          }
           terminal.flush();
           //String currentTime = String("Current Time: ") + String(Time.hourFormat12()) + ":" + String(Time.minute());
           //terminal.println(currentTime); // current time in hours and minutes
@@ -555,22 +647,37 @@ BLYNK_WRITE(V12) { // WEEKEND schedule
       stopsecondswd = (t.getStopHour() * 3600) + (t.getStopMinute() * 60);
       if(nowseconds >= stopsecondswd)
       {
-        digitalWrite(relay1, LOW);
-        terminal.println("RELAY1 TURNED OFF");
-        terminal.flush();
         if(nowseconds <= stopsecondswd + 90) // 90s on 60s timer ensures 1 trigger command is sent
         {   
-          digitalWrite(relay1, LOW);
+          if(relay1selected == 1)
+          {
+           digitalWrite(relay1, LOW);
+           terminal.println("RELAY1 TURNED OFF");
+          }
+          if(relay2selected == 1)
+          {
+           digitalWrite(relay2, LOW);
+           terminal.println("RELAY2 TURNED OFF");
+          }
+          if(relay3selected == 1)
+          {
+           digitalWrite(relay3, LOW);
+           terminal.println("RELAY3 TURNED OFF");
+          }
+          if(relay4selected == 1)
+          {
+           digitalWrite(relay4, LOW);
+           terminal.println("RELAY4 TURNED OFF");
+          }
+          terminal.flush();
         }              
       }
       else
       {
         if(nowseconds >= startsecondswd)
         {  
-          digitalWrite(relay1, HIGH);
           terminal.println("WEEKEND DEVICE IS ON");
           terminal.flush();
- 
         }           
       }
     }
@@ -663,8 +770,26 @@ BLYNK_WRITE(V13) { // CUSTOM schedule
         if(nowseconds <= startsecondswd + 90) // 90s on 60s timer ensures 1 trigger command is sent
         {    
           // put code here to run relay
-          digitalWrite(relay1, HIGH);
-          terminal.println("RELAY1 TURNED ON");
+          if(relay1selected == 1)
+          {
+           digitalWrite(relay1, HIGH);
+           terminal.println("RELAY1 TURNED ON"); 
+          }
+          if(relay2selected == 1)
+          {
+           digitalWrite(relay2, HIGH);
+           terminal.println("RELAY2 TURNED ON"); 
+          }
+           if(relay3selected == 1)
+          {
+           digitalWrite(relay3, HIGH);
+           terminal.println("RELAY3 TURNED ON"); 
+          }
+          if(relay4selected == 1)
+          {
+           digitalWrite(relay4, HIGH);
+           terminal.println("RELAY4 TURNED ON"); 
+          }
           terminal.flush();
           //String currentTime = String("Current Time: ") + String(Time.hourFormat12()) + ":" + String(Time.minute());
           //terminal.println(currentTime); // current time in hours and minutes
@@ -678,22 +803,37 @@ BLYNK_WRITE(V13) { // CUSTOM schedule
       stopsecondswd = (t.getStopHour() * 3600) + (t.getStopMinute() * 60);
       if(nowseconds >= stopsecondswd)
       {
-        digitalWrite(relay1, LOW);
-        terminal.println("RELAY1 TURNED OFF");
-        terminal.flush();
         if(nowseconds <= stopsecondswd + 90) // 90s on 60s timer ensures 1 trigger command is sent
         {   
-          digitalWrite(relay1, LOW);
+          if(relay1selected == 1)
+          {
+           digitalWrite(relay1, LOW);
+           terminal.println("RELAY1 TURNED OFF");
+          }
+          if(relay2selected == 1)
+          {
+           digitalWrite(relay2, LOW);
+           terminal.println("RELAY2 TURNED OFF");
+          }
+          if(relay3selected == 1)
+          {
+           digitalWrite(relay3, LOW);
+           terminal.println("RELAY3 TURNED OFF");
+          }
+          if(relay4selected == 1)
+          {
+           digitalWrite(relay4, LOW);
+           terminal.println("RELAY4 TURNED OFF");
+          }
+          terminal.flush();
         }              
       }
       else
       {
         if(nowseconds >= startsecondswd)
         {  
-          digitalWrite(relay1, HIGH);
           terminal.println("CUSTOM DEVICE IS ON");
           terminal.flush();
- 
         }           
       }
     }
@@ -704,6 +844,58 @@ BLYNK_WRITE(V13) { // CUSTOM schedule
       // nothing to do today, check again in 30 SECONDS time    
     }
     terminal.println();
+  }
+}
+BLYNK_WRITE(V14) // relay1 selected? 
+{
+  if(param.asInt() == 1)
+  {
+  // execute this code if the switch widget is now ON
+  relay1selected = 1;
+  }
+  else
+  {
+    // execute this code if the switch widget is now OFF
+    relay1selected = 0;
+  }
+}
+BLYNK_WRITE(V15) // relay2 selected? 
+{
+  if(param.asInt() == 1)
+  {
+  // execute this code if the switch widget is now ON
+  relay2selected = 1;
+  }
+  else
+  {
+    // execute this code if the switch widget is now OFF
+    relay2selected = 0;
+  }
+}
+BLYNK_WRITE(V16) // relay2 selected? 
+{
+  if(param.asInt() == 1)
+  {
+  // execute this code if the switch widget is now ON
+  relay3selected = 1;
+  }
+  else
+  {
+    // execute this code if the switch widget is now OFF
+    relay3selected = 0;
+  }
+}
+BLYNK_WRITE(V17) // relay2 selected? 
+{
+  if(param.asInt() == 1)
+  {
+  // execute this code if the switch widget is now ON
+  relay4selected = 1;
+  }
+  else
+  {
+    // execute this code if the switch widget is now OFF
+    relay4selected = 0;
   }
 }
 void batteryV(){ // get battery SoC 
