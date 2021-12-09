@@ -7,10 +7,10 @@ Website: www.brlabelectronics.com
 Written By: Bryan Restine
 Email: bryan.restine@brlabelectronics.com
 
-Relay 1 Manual ON/OFF BLYNK(V1)
-Relay 2 Manual ON/OFF BLYNK(V2)
-Relay 3 Manual ON/OFF BLYNK(V3)
-Relay 4 Manual ON/OFF BLYNK(V4)
+Relay 1 Manual ON/OFF BLYNK(V0)
+Relay 2 Manual ON/OFF BLYNK(V1)
+Relay 3 Manual ON/OFF BLYNK(V2)
+Relay 4 Manual ON/OFF BLYNK(V3)
 Battery SoC Gauge BLYNK(V4)
 Terminal BLYNK(V5)
 ALL DAYS Button ON/OFF BLYNK(V6)
@@ -993,6 +993,12 @@ void activetoday(){ // check if schedule should run today and refresh time input
    }
   }
 }
+void wifistrength(){
+ WiFiSignal sig = WiFi.RSSI();
+ float strength = sig.getStrength();
+ String WiFiStrength = String(strength,0) + String("%");
+ Particle.publish("WiFi Strength", WiFiStrength, PRIVATE);
+}
 void setup() { // setup code runs once first
  // Debug console
   Serial.begin(115200);
@@ -1012,6 +1018,7 @@ void setup() { // setup code runs once first
   currentDay();
   terminal.flush();
   timer.setInterval(10000L, activetoday);  // check every 10 SECONDS if schedule should run today 
+  timer.setInterval(120000L, wifistrength); // get the wifi strength every 120 seconds
 }
 void loop() {
   Blynk.run();
