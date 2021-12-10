@@ -75,7 +75,7 @@ BLYNK_CONNECTED() {
 if (isFirstConnect) {
   Blynk.syncAll();
   Blynk.notify("TIMER STARTING!!!!");
-isFirstConnect = false;
+  isFirstConnect = false;
 }
 }
 BLYNK_WRITE(V0) // relay1 manual on/off
@@ -1006,8 +1006,14 @@ void wifistrength(){
 void terminalproperty(){
  WiFiSignal sig = WiFi.RSSI();
  float strength = sig.getStrength();
- double voltage = analogRead(BATT)*0.0011224;
- int SoC = map(voltage, 3.20, 4.12, 0.00, 100.00); 
+ double voltage;
+ double avgvoltage;
+ for(int i = 0; i <= 49; i++)
+ {
+  voltage = voltage + analogRead(BATT)*0.0011224; 
+ }
+ avgvoltage = voltage*0.02;
+ int SoC = map(avgvoltage, 3.20, 4.12, 0.00, 100.00); 
  String terminalLabel = String("                        WiFi Strength: ") + String(strength,0) + String("%                      Battery SoC: ") + String(SoC) + String("%");
  Blynk.setProperty(V5, "label", terminalLabel);
 }
