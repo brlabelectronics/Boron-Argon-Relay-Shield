@@ -901,9 +901,11 @@ BLYNK_WRITE(V17) // relay2 selected?
 void batteryV(){ // get battery SoC 
   // custom battery function
     double voltage = analogRead(BATT)*0.0011224;
-    String BV = String(voltage,2) + String("V");
-    Particle.publish("Battery Voltage", BV, PRIVATE);
+    //String BV = String(voltage,2) + String("V");
+    //Particle.publish("Battery Voltage", BV, PRIVATE);
     int SoC = map(voltage, 3.20, 4.12, 0.00, 100.00);
+    //String displaySoC = String("      Battery: ") + String(SoC) + String("%");
+    //Blynk.setProperty(V5, "label", displaySoC);
     Blynk.virtualWrite(V4, SoC);
 }
 void currentTime(){ // get current time
@@ -919,8 +921,8 @@ void currentTime(){ // get current time
   }
   else
   {
-   String currentTime = String("Current Time: ") + String(Time.hourFormat12()) + ":" + String(Time.minute());
-   terminal.print(currentTime); // current time in hours and minutes
+   String currentTimefixed = String("Current Time: ") + String(Time.hourFormat12()) + ":" + String(Time.minute());
+   terminal.print(currentTimefixed); // current time in hours and minutes
    terminal.flush();
   }
   int isAM = Time.isAM();
@@ -950,7 +952,7 @@ void currentDay(){ // get current day
     terminal.println("Monday");
     terminal.flush();
     break;
-   case 3: 
+    case 3: 
     terminal.println("Tuesday");
     terminal.flush();
     break;
@@ -998,8 +1000,16 @@ void wifistrength(){
  float strength = sig.getStrength();
  //String WiFiStrength = String(strength,0) + String("%");
  //Particle.publish("WiFi Strength", WiFiStrength, PRIVATE);
- String displaywifi = String("WiFi Strength: ") + String(strength,0) + String("%");
- Blynk.setProperty(V5, "label", displaywifi);
+ //String displaywifi = String(" WiFi Strength: ") + String(strength,0) + String("%");
+ //Blynk.setProperty(V5, "label", displaywifi);
+}
+void terminalproperty(){
+ WiFiSignal sig = WiFi.RSSI();
+ float strength = sig.getStrength();
+ double voltage = analogRead(BATT)*0.0011224;
+ int SoC = map(voltage, 3.20, 4.12, 0.00, 100.00); 
+ String terminalLabel = String("                        WiFi Strength: ") + String(strength,0) + String("%                      Battery SoC: ") + String(SoC) + String("%");
+ Blynk.setProperty(V5, "label", terminalLabel);
 }
 void setup() { // setup code runs once first
  // Debug console
@@ -1018,32 +1028,19 @@ void setup() { // setup code runs once first
   terminal.println(F("Blynk v" BLYNK_VERSION ": Device has Booted"));
   currentTime();
   currentDay();
+  batteryV();
+  terminalproperty();
   terminal.flush();
   timer.setInterval(10000L, activetoday);  // check every 10 SECONDS if schedule should run today 
   timer.setInterval(10000L, wifistrength); // get the wifi strength every 10 seconds
+  timer.setInterval(10000L, batteryV);
+  timer.setInterval(60000L, currentTime);
+  timer.setInterval(3600000L, currentDay);
+  timer.setInterval(10000L, terminalproperty); 
 }
 void loop() {
   Blynk.run();
   timer.run();
-  // update in 120 sec intervals
-  if ((millis() - batterylastmillis) > 120000) 
-  {
-      batterylastmillis = millis();
-      batteryV();
-  }
-  // update in 60 sec intervals
-  if ((millis() - currentTimelastmillis) > 60000) 
-  {
-      currentTimelastmillis = millis();
-      currentTime();
-  }
-  // update in 30 min intervals
-  if ((millis() - currentDaylastmillis) > 1800000) 
-  {
-      currentDaylastmillis = millis();
-      currentDay();
-  }
-  
   // You can inject your own code or combine it with other sketches.
   // Check other examples on how to communicate with Blynk. Remember
   // to avoid delay() function!
