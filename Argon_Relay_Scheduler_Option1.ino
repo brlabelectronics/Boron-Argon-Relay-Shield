@@ -1013,7 +1013,7 @@ void terminalproperty(){
   voltage = voltage + analogRead(BATT)*0.0011224; 
  }
  avgvoltage = voltage*0.02;
- int SoC = map(avgvoltage, 3.20, 4.12, 0.00, 100.00); 
+ int SoC = map(avgvoltage, 3.20, 4.20, 0.00, 100.00); 
  String terminalLabel = String("                        WiFi Strength: ") + String(strength,0) + String("%                      Battery SoC: ") + String(SoC) + String("%");
  Blynk.setProperty(V5, "label", terminalLabel);
 }
