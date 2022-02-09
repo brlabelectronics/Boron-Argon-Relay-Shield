@@ -144,7 +144,7 @@ BLYNK_WRITE(V6) // ALL DAYS Schedule Selected
     custom = 0;
     Blynk.syncVirtual(V10);
     terminal.clear()
-    ;terminal.println("ALL DAYS SCHEDULE HAS BEEN ACTIVATIED AT:");
+    ;terminal.println("ALL DAYS SCHEDULE HAS BEEN ACTIVATED AT:");
     currentTime();
     terminal.flush();
     currentDay();
@@ -165,7 +165,7 @@ BLYNK_WRITE(V7) // WEEKDAYS Schedule Selected
     custom = 0;
     Blynk.syncVirtual(V11);
     terminal.clear()
-    ;terminal.println("WEEKDAYS SCHEDULE HAS BEEN ACTIVATIED AT:");
+    ;terminal.println("WEEKDAYS SCHEDULE HAS BEEN ACTIVATED AT:");
     currentTime();
     terminal.flush();
     currentDay();
@@ -186,7 +186,7 @@ BLYNK_WRITE(V8) // WEEKEND Schedule Selected
     custom = 0;
     Blynk.syncVirtual(V12);
     terminal.clear()
-    ;terminal.println("WEEKEND SCHEDULE HAS BEEN ACTIVATIED AT:");
+    ;terminal.println("WEEKEND SCHEDULE HAS BEEN ACTIVATED AT:");
     currentTime();
     terminal.flush();
     currentDay();
@@ -207,7 +207,7 @@ BLYNK_WRITE(V9) // CUSTOM Schedule Selected
     custom = 1;
     Blynk.syncVirtual(V13);
     terminal.clear()
-    ;terminal.println("CUSTOM SCHEDULE HAS BEEN ACTIVATIED AT:");
+    ;terminal.println("CUSTOM SCHEDULE HAS BEEN ACTIVATED AT:");
     currentTime();
     terminal.flush();
     currentDay();
